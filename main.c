@@ -15,8 +15,8 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-// buttons
-#define non			0
+// buttons to check the functions
+#define non		0
 #define upBtn		1
 #define downBtn		2
 #define okBtn		3
@@ -89,7 +89,7 @@ void usartReceiveString(char *str);
 void usartSendChar(uint8_t data);
 
 // common sets for commands and acks
-const char Header[]			= {0xEF, 0x01};
+const char Header[]		= {0xEF, 0x01};
 const char Address[]		= {0xFF, 0xFF, 0xFF, 0xFF};
 const char Command[]		= {0x01, 0x00};
 
@@ -101,8 +101,8 @@ const char fp_imz2ch2[]		= {0x4, 0x2, 0x2, 0x0, 0x9};
 const char fp_createModel[]	= {0x3, 0x5, 0x0, 0x9};
 char fp_storeModel[]		= {0x6, 0x6, 0x1, 0x0, 0x1, 0x0, 0xE};
 const char fp_search[]		= {0x8, 0x4, 0x1, 0x0, 0x0, 0x0, 0xA3, 0x0, 0xB1};
-char fp_delete[]			= {0x7, 0xC, 0x0, 0x0, 0x0, 0x1, 0x0, 0x15};
-char fp_empty[]				= {0x3, 0xD, 0x0, 0x11};
+char fp_delete[]		= {0x7, 0xC, 0x0, 0x0, 0x0, 0x1, 0x0, 0x15};
+char fp_empty[]			= {0x3, 0xD, 0x0, 0x11};
 
 
 int main(void) {
@@ -119,7 +119,7 @@ int main(void) {
 	stringLCD("USER"); // display message
 	_delay_ms(2000);
 	
-	sendCmd2Fps(FP_connect);
+	sendCmd2Fps(FP_connect); // password verification command
 	_delay_ms(500); // 500ms delay
 	
 	unsigned char optionsCounter = 0;
@@ -164,6 +164,10 @@ int main(void) {
 		_delay_ms(100);
 	}
 }
+/*initialize buttons*/
+void initButtons() {
+	// add ports for buttons
+}
 
 /* initialize solenoid */
 void initSolenoid() {
@@ -178,23 +182,23 @@ void initButtons(){
 
 /*button functions*/
 char buttonOperations() {
-// 	if (PINE & (1<<0) == 0) {
-// 		return upBtn;
-// 	}
-// 	else if(PINE & (1<<1) == 0) {
-// 		return downBtn;
-// 	}
-// 	else if(PINE & (1<<2) == 0) {
-// 		return okBtn;
-// 	}
-// 
-// 	else if(PINE & (1<<3) == 0) {
-// 		return cancelBtn;
-// 	}
-// 	
-// 	else {
-// 		return non;
-// 	}	
+ 	if (PINE & (1<<0) == 0) {
+ 		return upBtn;
+ 	}
+ 	else if(PINE & (1<<1) == 0) {
+ 		return downBtn;
+ 	}
+ 	else if(PINE & (1<<2) == 0) {
+ 		return okBtn;
+ 	}
+ 
+ 	else if(PINE & (1<<3) == 0) {
+ 		return cancelBtn;
+ 	}
+ 	
+ 	else {
+ 		return non;
+ 	}	
 	return okBtn;
 }
 
@@ -480,7 +484,7 @@ char sendCmd2Fps(char operation) {
 	return successed;
 }
 
-/*----------------------start of USART section------------------------*/
+/* USARt */
 void usartInit() {
 	/*
 			  U2Xn = 0		   U2Xn = 1
